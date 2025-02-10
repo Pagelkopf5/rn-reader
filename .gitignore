@@ -1,0 +1,33 @@
+# Node.js (Frontend)
+frontend/node_modules/
+frontend/build/
+frontend/.env
+frontend/.parcel-cache/
+frontend/.next/
+frontend/dist/
+
+# Golang (Backend)
+backend/bin/
+backend/build/
+backend/*.exe
+backend/.env
+backend/vendor/
+backend/coverage.out
+
+# Docker
+docker-compose.override.yml
+.dockerignore
+*.tar
+
+# Logs and OS Files
+**/logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE and System Files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
