@@ -1,16 +1,16 @@
 package main
 
 import (
-	"fmt"
-	"net/http"
+	"log"
+	"rn-reader-backend/api"
 )
 
-func helloHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello, Golang!")
+func main() {
+	runApi()
 }
 
-func main() {
-	http.HandleFunc("/", helloHandler)
-	fmt.Println("Server is running on port 8080")
-	http.ListenAndServe(":8080", nil)
+func runApi() {
+	log.Println("Run API")
+	api := api.New()
+	api.Run()
 }
