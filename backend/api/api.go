@@ -1,6 +1,7 @@
 package api
 
 import (
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -34,6 +35,7 @@ func (a Api) Router() *httprouter.Router {
 	router := httprouter.New()
 
 	router.GET("/", a.handleInfo)
+	router.GET("/:stories", a.handleStories)
 
 	return router
 }
@@ -41,4 +43,28 @@ func (a Api) Router() *httprouter.Router {
 func (a Api) handleInfo(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	log.Println("GET /")
 	w.WriteHeader(http.StatusNoContent)
+}
+
+func (a Api) handleStories(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	log.Println("GET /" + ps.ByName("stories"))
+	url := "https://hacker-news.firebaseio.com/v0/" + ps.ByName("stories") + ".json"
+
+	resp, err := http.DefaultClient.Get(url)
+	if err != nil {
+		http.Error(w, "Error fetching data: "+err.Error(), http.StatusInternalServerError)
+		a.logger.Println(err)
+		return
+	}
+
+	defer resp.Body.Close()
+
+	w.Header().Set("Content-Type", "application/json")
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		http.Error(w, "Error reading response: "+err.Error(), http.StatusInternalServerError)
+		a.logger.Println(err)
+		return
+	}
+
+	w.Write(body)
 }
