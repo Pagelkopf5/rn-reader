@@ -47,6 +47,13 @@ func (a Api) handleInfo(w http.ResponseWriter, r *http.Request, _ httprouter.Par
 
 func (a Api) handleStories(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	log.Println("GET /" + ps.ByName("stories"))
+	stories := []string{"topstories", "newstories", "beststories"}
+
+	if !contains(stories, ps.ByName("stories")) {
+		http.Error(w, "Invalid stories type", http.StatusBadRequest)
+		return
+	}
+
 	url := "https://hacker-news.firebaseio.com/v0/" + ps.ByName("stories") + ".json"
 
 	resp, err := http.DefaultClient.Get(url)
@@ -67,4 +74,13 @@ func (a Api) handleStories(w http.ResponseWriter, r *http.Request, ps httprouter
 	}
 
 	w.Write(body)
+}
+
+func contains(slice []string, item string) bool {
+	for _, v := range slice {
+		if v == item {
+			return true
+		}
+	}
+	return false
 }
